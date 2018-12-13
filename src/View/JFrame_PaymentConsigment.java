@@ -1,0 +1,668 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package View;
+
+import Hellper.C_Connection;
+import Hellper.Hellper_Portal;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
+import java.awt.print.Printable;
+import static java.awt.print.Printable.NO_SUCH_PAGE;
+import static java.awt.print.Printable.PAGE_EXISTS;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.table.DefaultTableModel;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author PCIT1
+ */
+public class JFrame_PaymentConsigment extends javax.swing.JFrame {
+
+    /**
+     * Creates new form JFrame_PaymentConsigment
+     */
+    Connection connection;
+    Statement stt;
+    String sql;
+    ResultSet res;
+    PreparedStatement ps = null;
+
+    Hellper_Portal hellper_Portal;
+
+    public String Doc_ids;
+    Hellper_Portal hellper_Portal1;
+
+    public int nilai = 0;
+
+    public JFrame_PaymentConsigment() {
+        initComponents();
+
+        Image image = null;
+        try {
+
+            File folderInput = new File("C:\\Users\\Logo\\lapis_bandung.png");
+            txt_icon_laps.setIcon(ResizeImage1(folderInput.getAbsolutePath(), null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        try {
+
+            File folderInput = new File("C:\\Users\\Logo\\lapis_bandung_pandan.jfif");
+            txt_image_lapsB.setIcon(ResizeImage2(folderInput.getAbsolutePath(), null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public ImageIcon ResizeImage1(String ImagePath, byte[] pic) {
+        ImageIcon myImage = null;
+        if (ImagePath != null) {
+            myImage = new ImageIcon(ImagePath);
+        } else {
+            myImage = new ImageIcon(pic);
+        }
+        Image img = myImage.getImage();
+        Image newImage = img.getScaledInstance(txt_icon_laps.getWidth(), txt_icon_laps.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImage);
+        return image;
+
+    }
+    
+      public ImageIcon ResizeImage2(String ImagePath, byte[] pic) {
+        ImageIcon myImage = null;
+        if (ImagePath != null) {
+            myImage = new ImageIcon(ImagePath);
+        } else {
+            myImage = new ImageIcon(pic);
+        }
+        Image img = myImage.getImage();
+        Image newImage = img.getScaledInstance(txt_image_lapsB.getWidth(), txt_image_lapsB.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImage);
+        return image;
+
+    }
+
+    public JFrame_PaymentConsigment(String Doc_Id) {
+        initComponents();
+
+        Doc_ids = Doc_Id;
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("item");
+        model.addColumn("code");
+        model.addColumn("Decription");
+        model.addColumn("Price");
+        model.addColumn("Disc");
+        model.addColumn("Qty");
+        model.addColumn("Amount");
+
+        try {
+
+            sql = "SELECT\n"
+                    + "A.itemline, B.material_id, B.material_name, A.harga, A.disc_value, A.qty_pesan, A.nett_value\n"
+                    + "FROM\n"
+                    + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] AS A,\n"
+                    + "[192.168.12.12].[dbstore_ho].[dbo].[m_material] AS B\n"
+                    + "WHERE\n"
+                    + "A.materialdisplay_id = B.material_id and A.doc_id = '" + Doc_ids + "'";
+
+            connection = C_Connection.getConnection();
+            stt = connection.createStatement();
+            res = stt.executeQuery(sql);
+
+            while (res.next()) {
+
+                model.addRow(new Object[]{res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7)});
+
+            }
+            res.close();
+            stt.close();
+            jTTransaksi.setModel(model);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTTransaksi = new javax.swing.JTable();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txt_icon_laps = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        txt_image_lapsB = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Transaksi"));
+
+        jTTransaksi.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTTransaksi);
+
+        jButton1.setText("CARI");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Transaksi Order"));
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "QTY", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 112, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sub Total", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jButton2.setText("PAYMENT");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+
+        jButton3.setText("New Order");
+
+        jButton4.setText("Taking Order");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jPanel6.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel1.setText("35K");
+
+        txt_icon_laps.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_icon_lapsMouseClicked(evt);
+            }
+        });
+
+        jLabel3.setText("Lapis Bandung Pandan");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel1))
+                    .addComponent(txt_icon_laps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(2, 2, 2)
+                .addComponent(txt_icon_laps, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel7.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jLabel5.setText("Lapis Bandung");
+
+        jLabel6.setText("35K");
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel6))
+                    .addComponent(txt_image_lapsB, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6)
+                .addGap(2, 2, 2)
+                .addComponent(txt_image_lapsB, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel5)
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(188, Short.MAX_VALUE))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(17, 17, 17))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+//        JFrame_ConsigmentOrder jDialogConsigmentOrder = new JFrame_ConsigmentOrder();
+//        jDialogConsigmentOrder.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+        JFrame_ConsigmentOrder jFrame_ConsigmentOrder = new JFrame_ConsigmentOrder();
+        jFrame_ConsigmentOrder.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton4MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+
+        PrinterJob pj = PrinterJob.getPrinterJob();
+        PageFormat pf = pj.defaultPage();
+        Paper paper = new Paper();
+        paper.setSize(220, 500);
+        double margin = 10;
+        paper.setImageableArea(margin, margin, paper.getWidth() - margin, paper.getHeight()
+                - margin);
+        pf.setPaper(paper);
+
+        pj.setPrintable(new MyPrintable(), pf);
+        if (pj.printDialog()) {
+            try {
+                pj.print();
+
+            } catch (PrinterException e) {
+                System.out.println(e);
+            }
+        }
+
+        try {
+            sql = "UPDATE \n"
+                    + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] \n"
+                    + "SET flag_proses = 'Y', process_date = convert(varchar, getdate(), 120) \n"
+                    + "WHERE doc_id = '" + Doc_ids + "'";
+
+            stt = connection.createStatement();
+            int executeUpdate = stt.executeUpdate(sql);
+            if (executeUpdate >= 1) {
+                System.out.println("Berhasil");
+            } else {
+                System.out.println("Gagal");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void txt_icon_lapsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_icon_lapsMouseClicked
+        
+//        JOptionPane.showMessageDialog(null, "Testing");
+        
+        JFrame_Consigment_Items jFrame_Consigment_Items = new JFrame_Consigment_Items("Ini Contoh");
+        jFrame_Consigment_Items.setVisible(true);
+        
+        
+    }//GEN-LAST:event_txt_icon_lapsMouseClicked
+
+    class MyPrintable implements Printable {
+
+        public int print(Graphics g, PageFormat pf, int pageIndex) {
+            hellper_Portal = new Hellper_Portal();
+            int count = 0;
+
+            List<String> list;
+
+            if (pageIndex != 0) {
+                return NO_SUCH_PAGE;
+            }
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setFont(new Font("Serif", Font.PLAIN, 8));
+            g2.setPaint(Color.black);
+            Image image = null;
+            try {
+
+                File folderInput = new File("C:\\Users\\Logo\\logo.png");
+                image = ImageIO.read(folderInput);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            g2.drawImage(image, 60, 80, rootPane);
+
+            g2.drawString("GARMELIA BAKERY", 70, 180);
+            g2.drawString("STORE HO : ", 90, 190);
+            g2.drawString("------------------------------------------------", 40, 200);
+
+            try {
+
+                sql = "SELECT doc_id, plant_id, tlp FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] WHERE doc_id = '" + Doc_ids + "'";
+
+                connection = C_Connection.getConnection();
+                stt = connection.createStatement();
+                res = stt.executeQuery(sql);
+
+                while (res.next()) {
+
+                    g2.drawString("" + res.getString(2) + "              " + hellper_Portal.getDate() + "          " + hellper_Portal.getTime() + "", 40, 210);
+                    g2.drawString("" + Doc_ids + "", 40, 220);
+                    g2.drawString("Admin               Customer              CASH", 40, 230);
+                    g2.drawString("Payment : CASH", 40, 240);
+
+                }
+                res.close();
+                stt.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+//            g2.drawString("R006              18-11-2018          11:24:02", 40, 210);
+//            g2.drawString("10000023", 40, 220);
+//            g2.drawString("Admin               Customer              CASH", 40, 230);
+//            g2.drawString("Payment : Debit B011414", 40, 240);
+            g2.drawString("------------------------------------------------", 40, 250);
+
+            try {
+
+                sql = "SELECT\n"
+                        + "B.material_name, A.qty_pesan,  A.harga , A.nett_value\n"
+                        + "FROM\n"
+                        + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] AS A,\n"
+                        + "[192.168.12.12].[dbstore_ho].[dbo].[m_material] AS B\n"
+                        + "WHERE\n"
+                        + "B.material_id = A.materialdisplay_id AND \n"
+                        + "A.doc_id = '" + Doc_ids + "' ";
+
+                connection = C_Connection.getConnection();
+                stt = connection.createStatement();
+                res = stt.executeQuery(sql);
+                list = new ArrayList<>();
+                while (res.next()) {
+                    g2.drawString("" + res.getString(1) + "             " + hellper_Portal.SetHarga(res.getString(2), res.getString(3)) + "", 40, 260 + ++count * 5);
+                    g2.drawString("" + res.getString(2) + "x" + res.getString(3) + " ", 40, 265 + ++count * 5);
+                    g2.drawString(" ", 40, 270 + ++count * 5);
+                    nilai = 270 + ++count * 5;
+                }
+
+                System.out.println("nilai : " + nilai);
+
+                res.close();
+                stt.close();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            }
+
+            g2.drawString("-----------------------------------------------+", 40, 320);
+            g2.drawString("TOTAL ITEM   :                                  " + hellper_Portal.TotalItem(Doc_ids) + "", 40, 330);
+            g2.drawString("TOTAL QTY    :                                  " + hellper_Portal.TotalQty(Doc_ids) + "", 40, 340);
+            g2.drawString("TOTAL ORDER  :                        " + hellper_Portal.TotalOrder(Doc_ids) + "", 40, 350);
+            g2.drawString("DISCOUNT       :                           " + hellper_Portal.TotalDiscount(Doc_ids) + "", 40, 360);
+            g2.drawString("NETTO            :                           " + hellper_Portal.TotalNett(Doc_ids) + "", 40, 370);
+            g2.drawString("=====", 150, 380);
+            g2.drawString("PAYMENT      :                           " + hellper_Portal.TotalNett(Doc_ids) + "", 40, 390);
+            g2.drawString("PAYMENT CARD :                              0", 40, 400);
+            g2.drawString("CHANGE       :                                      0", 40, 410);
+            g2.drawString("------------------------------------------------", 40, 420);
+            g2.drawString("Harga Sudah Termasuk PPN", 60, 430);
+            g2.drawString("TERIMA KASIH ", 70, 440);
+            g2.drawString("Barang Yang Sudah DiBeli Tidak Dapat DiTukar", 20, 450);
+            g2.drawString("-------------------------------------------------", 40, 460);
+            g2.drawString("NPWP : 02.011.654.7-441.00", 65, 470);
+            g2.drawString("www.garmeliabakery.com ", 70, 480);
+            g2.drawString("Email : marketing@garmeliabakery.com ", 50, 490);
+
+            return PAGE_EXISTS;
+        }
+
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(JFrame_PaymentConsigment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(JFrame_PaymentConsigment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(JFrame_PaymentConsigment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(JFrame_PaymentConsigment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new JFrame_PaymentConsigment().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTTransaksi;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel txt_icon_laps;
+    private javax.swing.JLabel txt_image_lapsB;
+    // End of variables declaration//GEN-END:variables
+}
