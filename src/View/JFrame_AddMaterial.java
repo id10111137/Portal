@@ -11,11 +11,13 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -40,6 +42,10 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
     public int Action = 0;
     Hellper_Portal hellper_Portal;
     int baris;
+    public String Doc_Nomor;
+    File f;
+
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * Creates new form JFrame_AddMaterial
@@ -48,7 +54,7 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
 
     public JFrame_AddMaterial() {
         initComponents();
-
+        this.hellper_Portal = new Hellper_Portal();
         MaterialGroup();
         BaseUnit();
         MaterialType();
@@ -91,6 +97,10 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
         btn_simpan = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        edt_discount = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        edt_unit_conversion = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         edt_cari = new javax.swing.JTextField();
         btn_cari = new javax.swing.JButton();
@@ -103,7 +113,19 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
 
         jLabel1.setText("Nama Manterial");
 
+        edt_material_name.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edt_material_nameActionPerformed(evt);
+            }
+        });
+
         jLabel2.setText("Material Group");
+
+        JC_Material_Group.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JC_Material_GroupActionPerformed(evt);
+            }
+        });
 
         JC_MaterialType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -199,6 +221,10 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setText("Discount");
+
+        jLabel12.setText("Conversion");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -209,13 +235,15 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(JC_MaterialType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(edt_material_name)
                     .addComponent(JC_Material_Group, 0, 147, Short.MAX_VALUE)
-                    .addComponent(JC_Unit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(JC_Unit, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(edt_unit_conversion))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -232,9 +260,13 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
                                 .addGap(1, 1, 1))
                             .addComponent(edt_harga_beli)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(edt_harga_jual)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(edt_harga_jual)
+                            .addComponent(edt_discount))))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -282,7 +314,11 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel10)
-                                    .addComponent(edt_harga_jual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(edt_harga_jual, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel11)
+                                    .addComponent(edt_discount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(11, 11, 11)
@@ -306,8 +342,12 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(JC_MaterialType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(edt_unit_conversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(23, 23, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -359,7 +399,7 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
                     .addComponent(edt_cari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_cari))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -378,9 +418,9 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -395,7 +435,7 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
         int result = jFileChooser.showSaveDialog(null);
 
         if (result == JFileChooser.APPROVE_OPTION) {
-            File f = jFileChooser.getSelectedFile();
+            f = jFileChooser.getSelectedFile();
             edt_image.setText(f.getAbsolutePath());
             txt_image.setIcon(ResizeImage(f.getAbsolutePath(), null));
         } else {
@@ -599,11 +639,211 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
     private void jTMaterialMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTMaterialMouseClicked
         baris = jTMaterial.rowAtPoint(evt.getPoint());
         TableUpdateMaterial(baris);
+        Doc_Nomor = (jTMaterial.getValueAt(baris, 0).toString());
     }//GEN-LAST:event_jTMaterialMouseClicked
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
-        // TODO add your handling code here:
+
+        if (Doc_Nomor == null) {
+
+            try {
+                
+                String NewMaterial = hellper_Portal.IDMaterial();
+                sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[m_material]\n"
+                        + "           ([material_id]\n"
+                        + "           ,[material_name]\n"
+                        + "           ,[materialtype_id]\n"
+                        + "           ,[materialgroup_id]\n"
+                        + "           ,[materialdisplay_id]\n"
+                        + "           ,[base_unit]\n"
+                        + "           ,[flag_display_pos]\n"
+                        + "           ,[displaygroup_id]\n"
+                        + "           ,[account_id]\n"
+                        + "           ,[costcenter_id]\n"
+                        + "           ,[image]\n"
+                        + "           ,[user_entry]\n"
+                        + "           ,[user_update]\n"
+                        + "           ,[create_date]\n"
+                        + "           ,[modify_date]\n"
+                        + "           ,[flag_active]\n"
+                        + "           ,[gambar]\n"
+                        + "           ,[flag_konsinyasi]\n"
+                        + "           ,[old_material_id]\n"
+                        + "           ,[old_material_name]\n"
+                        + "           ,[plant])\n"
+                        + "     VALUES\n"
+                        + "           ('" + hellper_Portal.IDMaterial() + "','" + edt_material_name.getText() + "',"
+                        + "'FG','" + hellper_Portal.IdMaterialGroupID(JC_Material_Group.getSelectedItem().toString()) + "',"
+                        + "NULL,'" + JC_Unit.getSelectedItem() + "','Y','" + edt_material_name.getText() + "','11300100','R000'"
+                        + ",'data:image/png;base64," + encodeFileToBase64Binary(f) + "','ADMIN','ADMIN',GETDATE(),GETDATE(),'Y',NULL,'N',NULL,NULL,'" + text_plant.getText() + "')";
+                System.out.println(sql);
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+
+                sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[m_material_price]\n"
+                        + "           ([material_id]\n"
+                        + "           ,[start_date]\n"
+                        + "           ,[finish_date]\n"
+                        + "           ,[hpp]\n"
+                        + "           ,[harga_jual]\n"
+                        + "           ,[disc]\n"
+                        + "           ,[harga_disc]\n"
+                        + "           ,[flag_active]\n"
+                        + "           ,[user_entry]\n"
+                        + "           ,[user_update]\n"
+                        + "           ,[create_date]\n"
+                        + "           ,[modify_date]\n"
+                        + "           ,[harga_beli]\n"
+                        + "           ,[harga_mav]\n"
+                        + "           ,[unit_beli]\n"
+                        + "           ,[unit_mav]\n"
+                        + "           ,[flag_harga])\n"
+                        + "     VALUES\n"
+                        + "           ('" + NewMaterial + "','" + sdf.format(start_date.getSelectedDate().getTime()) + "','" + sdf.format(enddate.getSelectedDate().getTime()) + "',0," + edt_harga_jual.getText() + "," + edt_discount.getText() + ",NULL,'Y','ADMIN','ADMIN', GETDATE(), GETDATE(), " + edt_harga_beli.getText() + ",NULL,NULL,NULL,'B')";
+                System.out.println(sql);
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+
+                sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[m_slocmaterial]\n"
+                        + "           ([material_id]\n"
+                        + "           ,[plant_id]\n"
+                        + "           ,[sloc_id]\n"
+                        + "           ,[flag]\n"
+                        + "           ,[user_entry]\n"
+                        + "           ,[user_update]\n"
+                        + "           ,[create_date]\n"
+                        + "           ,[modify_date])\n"
+                        + "\n"
+                        + "	SELECT '" + NewMaterial + "'\n"
+                        + "           ,[plant_id]\n"
+                        + "           ,[sloc_id]\n"
+                        + "           ,[flag]\n"
+                        + "           ,[user_entry]\n"
+                        + "           ,[user_update]\n"
+                        + "           ,[create_date]\n"
+                        + "           ,[modify_date]  FROM [192.168.12.12].[dbstore].[dbo].m_slocmaterial WHERE material_id = 'FG00284'";
+                System.out.println(sql);
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+
+                sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[m_unit_conversion]\n"
+                        + "           ([material_id]\n"
+                        + "           ,[base_unit]\n"
+                        + "           ,[base_conversion]\n"
+                        + "           ,[unit_conversion]\n"
+                        + "           ,[X_conversion]\n"
+                        + "           ,[Y_conversion]\n"
+                        + "           ,[value_conversion]\n"
+                        + "           ,[flag]\n"
+                        + "           ,[user_entry]\n"
+                        + "           ,[user_update]\n"
+                        + "           ,[create_date]\n"
+                        + "           ,[modify_date])\n"
+                        + "     VALUES\n"
+                        + "           ('" + NewMaterial + "','" + JC_Unit.getSelectedItem() + "',"
+                        + "" + edt_unit_conversion.getText() + ","
+                        + "'" + JC_Unit.getSelectedItem() + "',"
+                        + "" + edt_unit_conversion.getText() + ","
+                        + "" + edt_unit_conversion.getText() + ","
+                        + "" + edt_unit_conversion.getText() + ","
+                        + "'Y','ADMIN','ADMIN',GETDATE(),GETDATE())";
+                System.out.println(sql);
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+
+                sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[m_recipe]\n"
+                        + "           ([materialdisplay_id]\n"
+                        + "           ,[materialrecipe_id]\n"
+                        + "           ,[qty_display]\n"
+                        + "           ,[unit_display]\n"
+                        + "           ,[qty_recipe]\n"
+                        + "           ,[unit_recipe]\n"
+                        + "           ,[qty_recipe_conv]\n"
+                        + "           ,[unit_recipe_conv]\n"
+                        + "           ,[flag_stock]\n"
+                        + "           ,[flag_detail]\n"
+                        + "           ,[flag_active]\n"
+                        + "           ,[user_entry]\n"
+                        + "           ,[user_update]\n"
+                        + "           ,[create_date]\n"
+                        + "           ,[modify_date])\n"
+                        + "     VALUES\n"
+                        + "           ('" + NewMaterial + "','" + NewMaterial + "',1, '" + JC_Unit.getSelectedItem() + "',1"
+                        + ",'" + JC_Unit.getSelectedItem() + "',1.00,"
+                        + "'" + JC_Unit.getSelectedItem() + "','Y','N','Y','ADMIN','ADMIN',GETDATE(),GETDATE())";
+
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+                JOptionPane.showMessageDialog(null, "Proses Masukan Material Sukses, System Akan Syncronus dengan database lainya.");
+
+            } catch (SQLException E) {
+                E.printStackTrace();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Input");
+//            JOptionPane.showMessageDialog(null, "data:image/png;base64," + encodeFileToBase64Binary(f));
+//            try {
+//                sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[m_material] SET "
+//                        + " m_material ='" + edt_material_name.getText() + "', "
+//                        + " materialtype_id ='" + JC_MaterialType.getSelectedItem() + "', "
+//                        + "materialgroup_id = '" + JC_Material_Group.getSelectedItem() + "',"
+//                        + "base_unit ='" + JC_Unit.getSelectedItem() + "', "
+//                        + "displaygroup_id ='" + JC_Material_Group.getSelectedItem() + "', "
+//                        + "user_update ='Admin', "
+//                        + "modify_date = GETDATE(), "
+//                        + "image = 'data:image/png;base64," + encodeFileToBase64Binary(f) + "'"
+//                        + "plant_id = '" + text_plant.getText() + "'"
+//                        + "WHERE material_id = '" + Doc_Nomor + "'";
+//
+//                stt = connection.createStatement();
+//                int executeUpdateMaterial = stt.executeUpdate(sql);
+//                if (executeUpdateMaterial >= 1) {
+//
+//                    sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[m_material_price] SET "
+//                            + "start_date ='" + start_date.getSelectedDate() + "', "
+//                            + "finish_date ='" + enddate.getSelectedDate() + "', "
+//                            + "hpp = '" + JC_Material_Group.getSelectedItem() + "',"
+//                            + "harga_jual ='" + edt_harga_jual.getText() + "', "
+//                            + "harga_beli ='" + edt_harga_beli.getText() + "', "
+//                            + "user_update ='Admin', "
+//                            + "modify_date = GETDATE() "
+//                            + "WHERE material_id = '" + Doc_Nomor + "'";
+//
+//                    stt = connection.createStatement();
+//                    int executeUpdatePrice = stt.executeUpdate(sql);
+//
+//                    if (executeUpdatePrice >= 1) {
+//                        JOptionPane.showMessageDialog(null, " Update Berhasil");
+//                    }
+//                }
+//
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+        }
+
+
     }//GEN-LAST:event_btn_simpanActionPerformed
+
+    private static String encodeFileToBase64Binary(File file) {
+        String Hasil = null;
+
+        try {
+            FileInputStream fileInputStreamReader = new FileInputStream(file);
+            byte[] bytes = new byte[(int) file.length()];
+            fileInputStreamReader.read(bytes);
+            Hasil = new String(Base64.encodeBase64(bytes), "UTF-8");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Hasil;
+    }
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
         Refresh();
@@ -625,6 +865,14 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
         Refresh();
     }//GEN-LAST:event_jButton2MouseClicked
 
+    private void edt_material_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_material_nameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edt_material_nameActionPerformed
+
+    private void JC_Material_GroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JC_Material_GroupActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JC_Material_GroupActionPerformed
+
     private void Refresh() {
         edt_material_name.setText("");
         edt_harga_beli.setText("");
@@ -633,6 +881,7 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
         edt_image.setText("");
         txt_image.setIcon(null);
         btn_simpan.setText("Simpan");
+        Doc_Nomor = null;
         TableMaterial(0);
 
     }
@@ -648,7 +897,6 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
         Image newImage = img.getScaledInstance(txt_image.getWidth(), txt_image.getHeight(), Image.SCALE_SMOOTH);
         ImageIcon image = new ImageIcon(newImage);
         return image;
-
     }
 
     /**
@@ -693,15 +941,19 @@ public class JFrame_AddMaterial extends javax.swing.JFrame {
     private javax.swing.JButton btn_cari;
     private javax.swing.JButton btn_simpan;
     private javax.swing.JTextField edt_cari;
+    private javax.swing.JTextField edt_discount;
     private javax.swing.JTextField edt_harga_beli;
     private javax.swing.JTextField edt_harga_jual;
     private javax.swing.JTextField edt_image;
     private javax.swing.JTextField edt_material_name;
+    private javax.swing.JTextField edt_unit_conversion;
     private datechooser.beans.DateChooserCombo enddate;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

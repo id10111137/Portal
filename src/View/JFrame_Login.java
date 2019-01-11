@@ -125,6 +125,15 @@ public class JFrame_Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
+        Login();
+    }//GEN-LAST:event_btn_loginActionPerformed
+
+    private void edt_usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_usernameActionPerformed
+
+        Login();
+    }//GEN-LAST:event_edt_usernameActionPerformed
+
+    private void Login() {
         try {
             sql = "SELECT username FROM USERS WHERE username='" + edt_username.getText() + "'";
             connection = C_Connection.getConnection();
@@ -151,12 +160,7 @@ public class JFrame_Login extends javax.swing.JFrame {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-
-    }//GEN-LAST:event_btn_loginActionPerformed
-
-    private void edt_usernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_usernameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_edt_usernameActionPerformed
+    }
 
     /**
      * @param args the command line arguments

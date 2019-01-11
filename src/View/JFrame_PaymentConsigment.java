@@ -38,6 +38,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
@@ -53,26 +54,23 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
     String sql;
     ResultSet res;
     PreparedStatement ps = null;
-
     Hellper_Portal hellper_Portal;
-
     public String Doc_ids;
-    Hellper_Portal hellper_Portal1;
-
     public int nilai = 0;
+    public int _Penanda;
 
     public JFrame_PaymentConsigment() {
         initComponents();
+    }
+
+    public JFrame_PaymentConsigment(String Doc_Id, int Penanda) {
+        initComponents();
+        this.hellper_Portal = new Hellper_Portal();
+        Doc_ids = Doc_Id;
+        _Penanda = Penanda;
 
         Image image = null;
-        try {
 
-            File folderInput = new File("C:\\Users\\Logo\\lapis_bandung.png");
-            txt_icon_laps.setIcon(ResizeImage1(folderInput.getAbsolutePath(), null));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
         try {
 
             File folderInput = new File("C:\\Users\\Logo\\lapis_bandung_pandan.jfif");
@@ -81,23 +79,13 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
             e.printStackTrace();
         }
 
+        TableList(Doc_ids, _Penanda);
+
+        edt_qty.setText(Integer.toString(hellper_Portal.TotalQtys()));
+        edt_sub_total.setText("Rp. " + Integer.toString(hellper_Portal.TotalNett(hellper_Portal.TotalOrders(), hellper_Portal.TotalDisc())));
     }
 
-    public ImageIcon ResizeImage1(String ImagePath, byte[] pic) {
-        ImageIcon myImage = null;
-        if (ImagePath != null) {
-            myImage = new ImageIcon(ImagePath);
-        } else {
-            myImage = new ImageIcon(pic);
-        }
-        Image img = myImage.getImage();
-        Image newImage = img.getScaledInstance(txt_icon_laps.getWidth(), txt_icon_laps.getHeight(), Image.SCALE_SMOOTH);
-        ImageIcon image = new ImageIcon(newImage);
-        return image;
-
-    }
-    
-      public ImageIcon ResizeImage2(String ImagePath, byte[] pic) {
+    public ImageIcon ResizeImage2(String ImagePath, byte[] pic) {
         ImageIcon myImage = null;
         if (ImagePath != null) {
             myImage = new ImageIcon(ImagePath);
@@ -109,47 +97,6 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
         ImageIcon image = new ImageIcon(newImage);
         return image;
 
-    }
-
-    public JFrame_PaymentConsigment(String Doc_Id) {
-        initComponents();
-
-        Doc_ids = Doc_Id;
-
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("item");
-        model.addColumn("code");
-        model.addColumn("Decription");
-        model.addColumn("Price");
-        model.addColumn("Disc");
-        model.addColumn("Qty");
-        model.addColumn("Amount");
-
-        try {
-
-            sql = "SELECT\n"
-                    + "A.itemline, B.material_id, B.material_name, A.harga, A.disc_value, A.qty_pesan, A.nett_value\n"
-                    + "FROM\n"
-                    + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] AS A,\n"
-                    + "[192.168.12.12].[dbstore_ho].[dbo].[m_material] AS B\n"
-                    + "WHERE\n"
-                    + "A.materialdisplay_id = B.material_id and A.doc_id = '" + Doc_ids + "'";
-
-            connection = C_Connection.getConnection();
-            stt = connection.createStatement();
-            res = stt.executeQuery(sql);
-
-            while (res.next()) {
-
-                model.addRow(new Object[]{res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7)});
-
-            }
-            res.close();
-            stt.close();
-            jTTransaksi.setModel(model);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
     }
 
     /**
@@ -168,15 +115,13 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
+        edt_qty = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        edt_sub_total = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        txt_icon_laps = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         txt_image_lapsB = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -230,28 +175,44 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "QTY", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
 
+        edt_qty.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 112, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(edt_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(35, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(edt_qty, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Sub Total", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP));
+
+        edt_sub_total.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(edt_sub_total, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(edt_sub_total, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButton2.setText("PAYMENT");
@@ -262,6 +223,16 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
         });
 
         jButton3.setText("New Order");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Taking Order");
         jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -311,49 +282,16 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
 
         jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jPanel6.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        jLabel1.setText("35K");
-
-        txt_icon_laps.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                txt_icon_lapsMouseClicked(evt);
-            }
-        });
-
-        jLabel3.setText("Lapis Bandung Pandan");
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel1))
-                    .addComponent(txt_icon_laps, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(2, 2, 2)
-                .addComponent(txt_icon_laps, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jPanel7.setBackground(new java.awt.Color(204, 204, 204));
         jPanel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jLabel5.setText("Lapis Bandung");
+        txt_image_lapsB.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                txt_image_lapsBMouseClicked(evt);
+            }
+        });
+
+        jLabel5.setText("Lapis Bandung Pandan");
 
         jLabel6.setText("35K");
 
@@ -389,18 +327,14 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(188, Short.MAX_VALUE))
+                .addContainerGap(402, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -437,6 +371,7 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
 //        JFrame_ConsigmentOrder jDialogConsigmentOrder = new JFrame_ConsigmentOrder();
 //        jDialogConsigmentOrder.setVisible(true);
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
@@ -447,54 +382,129 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
 
-        PrinterJob pj = PrinterJob.getPrinterJob();
-        PageFormat pf = pj.defaultPage();
-        Paper paper = new Paper();
-        paper.setSize(220, 500);
-        double margin = 10;
-        paper.setImageableArea(margin, margin, paper.getWidth() - margin, paper.getHeight()
-                - margin);
-        pf.setPaper(paper);
+        if (_Penanda == 1) {
+            JFrame_PaymentConsigmentValue jFrame_PaymentConsigmentValue = new JFrame_PaymentConsigmentValue();
+            jFrame_PaymentConsigmentValue.setVisible(true);
+            this.setVisible(false);
+        } else if (_Penanda == 0) {
 
-        pj.setPrintable(new MyPrintable(), pf);
-        if (pj.printDialog()) {
+            PrinterJob pj = PrinterJob.getPrinterJob();
+            PageFormat pf = pj.defaultPage();
+            Paper paper = new Paper();
+            paper.setSize(220, 500);
+            double margin = 10;
+            paper.setImageableArea(margin, margin, paper.getWidth() - margin, paper.getHeight()
+                    - margin);
+            pf.setPaper(paper);
+
+            pj.setPrintable(new MyPrintable(), pf);
+            if (pj.printDialog()) {
+                try {
+                    pj.print();
+
+                } catch (PrinterException e) {
+                    System.out.println(e);
+                }
+            }
+
             try {
-                pj.print();
+                sql = "UPDATE \n"
+                        + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] \n"
+                        + "SET flag_proses = 'Y', process_date = convert(varchar, getdate(), 120) \n"
+                        + "WHERE doc_id = '" + Doc_ids + "'";
 
-            } catch (PrinterException e) {
-                System.out.println(e);
+                stt = connection.createStatement();
+                int executeUpdate = stt.executeUpdate(sql);
+                if (executeUpdate >= 1) {
+                    System.out.println("Berhasil");
+                } else {
+                    System.out.println("Gagal");
+                }
+
+            } catch (SQLException e) {
             }
         }
-
-        try {
-            sql = "UPDATE \n"
-                    + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] \n"
-                    + "SET flag_proses = 'Y', process_date = convert(varchar, getdate(), 120) \n"
-                    + "WHERE doc_id = '" + Doc_ids + "'";
-
-            stt = connection.createStatement();
-            int executeUpdate = stt.executeUpdate(sql);
-            if (executeUpdate >= 1) {
-                System.out.println("Berhasil");
-            } else {
-                System.out.println("Gagal");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
     }//GEN-LAST:event_jButton2MouseClicked
 
-    private void txt_icon_lapsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_icon_lapsMouseClicked
-        
-//        JOptionPane.showMessageDialog(null, "Testing");
-        
-        JFrame_Consigment_Items jFrame_Consigment_Items = new JFrame_Consigment_Items("Ini Contoh");
-        jFrame_Consigment_Items.setVisible(true);
-        
-        
-    }//GEN-LAST:event_txt_icon_lapsMouseClicked
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+
+
+    }//GEN-LAST:event_jButton3MouseClicked
+
+    private void TableList(String _Doc_ic, int _Penanda) {
+
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("item");
+        model.addColumn("code");
+        model.addColumn("Decription");
+        model.addColumn("Price");
+        model.addColumn("Disc");
+        model.addColumn("Qty");
+        model.addColumn("Amount");
+
+        try {
+            if (_Penanda == 0) {
+                sql = "SELECT\n"
+                        + "A.itemline, B.material_id, B.material_name, A.harga, A.disc_value, A.qty_pesan, A.nett_value\n"
+                        + "FROM\n"
+                        + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] AS A,\n"
+                        + "[192.168.12.12].[dbstore_ho].[dbo].[m_material] AS B\n"
+                        + "WHERE\n"
+                        + "A.materialdisplay_id = B.material_id and A.doc_id = '" + Doc_ids + "'";
+            } else if (_Penanda == 1) {
+                sql = "SELECT\n"
+                        + "	A.item, A.material_id, B.material_name, A.price, '0' as Disc, A.qty,  A.amount\n"
+                        + "  FROM\n"
+                        + "  [192.168.12.12].[dbstore_ho].[dbo].[t_pos_log] AS A,\n"
+                        + "  [192.168.12.12].[dbstore_ho].[dbo].[m_material] AS B\n"
+                        + "  WHERE\n"
+                        + "  A.material_id = B.material_id order by A.item asc";
+            }
+
+            connection = C_Connection.getConnection();
+            stt = connection.createStatement();
+            res = stt.executeQuery(sql);
+
+            while (res.next()) {
+                model.addRow(new Object[]{res.getString(1), res.getString(2), res.getString(3), res.getString(4), res.getString(5), res.getString(6), res.getString(7)});
+            }
+
+            res.close();
+            stt.close();
+            jTTransaksi.setModel(model);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+    }
+
+    private void txt_image_lapsBMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txt_image_lapsBMouseClicked
+        if (hellper_Portal.CountData() > 1) {
+            JOptionPane.showMessageDialog(null, "1 Orang Cukup 1 Transaksi");
+        } else {
+            JFrame_Consigment_Items jFrame_Consigment_Items = new JFrame_Consigment_Items("FG00281");
+            jFrame_Consigment_Items.setVisible(true);
+            this.setVisible(false);
+        }
+
+
+    }//GEN-LAST:event_txt_image_lapsBMouseClicked
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+
+            sql = "DELETE FROM [192.168.12.12].[dbstore_ho].[dbo].[t_pos_log]";
+            connection = C_Connection.getConnection();
+            stt = connection.createStatement();
+            stt.executeUpdate(sql);
+
+            JFrame_PaymentConsigment jFrame_PaymentConsigment = new JFrame_PaymentConsigment(null, 10);
+            jFrame_PaymentConsigment.setVisible(true);
+            this.setVisible(false);
+
+        } catch (SQLException e) {
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     class MyPrintable implements Printable {
 
@@ -536,6 +546,10 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
 
                 while (res.next()) {
 
+//                    g2.drawString("" + res.getString(2) + "              " + hellper_Portal.getDate() + "          " + hellper_Portal.getTime() + "", 40, 210);
+//                    g2.drawString("" + Doc_ids + "", 40, 220);
+//                    g2.drawString("Admin               Customer              CASH", 40, 230);
+//                    g2.drawString("Payment : CASH", 40, 240);
                     g2.drawString("" + res.getString(2) + "              " + hellper_Portal.getDate() + "          " + hellper_Portal.getTime() + "", 40, 210);
                     g2.drawString("" + Doc_ids + "", 40, 220);
                     g2.drawString("Admin               Customer              CASH", 40, 230);
@@ -644,12 +658,12 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel edt_qty;
+    private javax.swing.JLabel edt_sub_total;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
@@ -657,12 +671,10 @@ public class JFrame_PaymentConsigment extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTTransaksi;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel txt_icon_laps;
     private javax.swing.JLabel txt_image_lapsB;
     // End of variables declaration//GEN-END:variables
 }

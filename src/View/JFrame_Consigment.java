@@ -7,6 +7,8 @@ package View;
 
 import Hellper.C_Connection;
 import Hellper.Hellper_Portal;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,6 +24,8 @@ import javafx.scene.text.FontSmoothingType;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -55,6 +59,11 @@ public class JFrame_Consigment extends javax.swing.JFrame {
      */
     public JFrame_Consigment() {
         initComponents();
+    }
+
+    public JFrame_Consigment(String Username) {
+        initComponents();
+        _Username = Username;
         this.hellper_Portal = new Hellper_Portal();
         getDataHeaderTable(ValuesDefault);
         getDataHeaderDetailTable(ValuesDefault);
@@ -66,10 +75,6 @@ public class JFrame_Consigment extends javax.swing.JFrame {
         DownPayment(ValuesDefault);
     }
 
-//        public JFrame_Consigment(String Username) {
-//        initComponents();
-//        _Username = Username;
-//    }
     private void DownPayment(int Status) {
         if (Status == 0) {
             jCPayment.setEnabled(false);
@@ -97,7 +102,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
             edt_disc_percent.setText("0");
             edt_disc_percent.setEnabled(false);
         } else {
-            Product(ValuesDefault);
+//            Product(ValuesDefault);
             edt_dic_rp.setEnabled(false);
             edt_dic_rp.setText("5000");
             edt_detail_qty.setText("");
@@ -128,82 +133,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
 
     }
 
-//    public int checkMaterialItems(String doc_id, String material_id) {
-//        int Hasil = 0;
-//
-//        try {
-//
-//            sql = "SELECT COUNT(doc_id) as count from [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] "
-//                    + "where "
-//                    + "doc_id = '" + doc_id + "' AND materialdisplay_id = '" + material_id + "'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getInt(1);
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//        return Hasil;
-//    }
-//    
-//    private void paymentType(int setValuesDefault) {
-//        try {
-//            if (setValuesDefault == 0) {
-//                sql = "SELECT * FROM [192.168.12.12].[dbstore_ho].[dbo].[t_paytype]";
-//            } else {
-//                sql = "SELECT\n"
-//                        + "C.Nama_type, A.doc_id, B.trans_id, c.code_type\n"
-//                        + "FROM\n"
-//                        + "[192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] AS A,\n"
-//                        + "[192.168.12.12].[dbstore_ho].[dbo].[t_dp_header] AS B,\n"
-//                        + "[192.168.12.12].[dbstore_ho].[dbo].[t_paytype] AS C\n"
-//                        + "WHERE \n"
-//                        + "A.doc_id = B.trans_id AND\n"
-//                        + "A.doc_id ='" + JtHeader.getValueAt(setValuesDefault, 0).toString() + "' AND "
-//                        + "B.type_bayar = C.code_type order by A.doc_id, B.trans_id";
-//            }
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                jCPayment.addItem(res.getString(1));
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//    }
-//
-//    private String rePaytype(String valuesType) {
-//        String Nilai = null;
-//        try {
-//            sql = "SELECT * FROM [192.168.12.12].[dbstore_ho].[dbo].[t_paytype] WHERE nama_type ='" + valuesType + "'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Nilai = res.getString(2);
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return Nilai;
-//    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -977,36 +907,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_edt_dic_rpActionPerformed
 
-//    private void goFormHeader(Integer id_get) {
-//
-//        if (id_get >= 0) {
-//
-//            edt_costumer_name.addItem(JtHeader.getValueAt(id_get, 5).toString());
-//            edt_costumer_name.setEnabled(false);
-//
-//            edt_date.setEnabled(false);
-//            jCPayment.setEnabled(false);
-//            edt_cash.setEnabled(false);
-//            edt_noncash.setEnabled(false);
-//            jCCostumerType.setEnabled(false);
-//            edt_paynote.setEnabled(false);
-//            edt_remarks.setText(JtHeader.getValueAt(id_get, 9).toString());
-//            edt_remarks.setEnabled(false);
-//            btn_save_header.setEnabled(false);
-//            btn_save_header.setText("Update");
-//        } else {
-//            setProfil();
-//            jCCostumerType.removeAll();
-//            jCCostumerType.setEnabled(true);
-//            edt_remarks.setText("");
-//            edt_costumer_name.setEnabled(true);
-//            edt_date.setEnabled(true);
-//            jCPayment.setEnabled(false);
-//            edt_remarks.setEnabled(true);
-//            btn_save_header.setEnabled(true);
-//            btn_save_header.setText("Save");
-//        }
-//    }
+
     private void CostumerType() {
         try {
             sql = "SELECT customer_id, customer_name FROM [192.168.12.12].[dbstore_ho].[dbo].[m_customer]";
@@ -1051,8 +952,6 @@ public class JFrame_Consigment extends javax.swing.JFrame {
 
         itemline = jTableDetail.getValueAt(baris, 3).toString();
         materialdisplay_id = jTableDetail.getValueAt(baris, 4).toString();
-
-//        JOptionPane.showMessageDialog(null, "Material Displays :" + materialdisplay_id+ " Item Line : "+itemline+" Tahun "+tahun);
         edt_detail_harga.setText(jTableDetail.getValueAt(baris, 7).toString());
         edt_disc_percent.setText(jTableDetail.getValueAt(baris, 8).toString());
         edt_detail_qty.setText(jTableDetail.getValueAt(baris, 6).toString());
@@ -1082,27 +981,6 @@ public class JFrame_Consigment extends javax.swing.JFrame {
         }
     }
 
-//    private String checkProduct(String product) {
-//        String Hasil = null;
-//
-//        try {
-//
-//            sql = "SELECT material_id FROM [192.168.12.12].[dbstore_ho].[dbo].[m_material] WHERE material_id = '" + product.substring(0, 7) + "'";
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getString(1).toString();
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//        return Hasil;
-//    }
 
     private void jCCostumerTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCCostumerTypeActionPerformed
         // TODO add your handling code here:
@@ -1132,7 +1010,6 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                 Check Kondisi Kosong Atau Tidak di database
              */
             if (materialdisplay_id != null) {
-//                JOptionPane.showMessageDialog(null, "Ini Untuk Update" + materialdisplay_id);
 
                 try {
                     sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] SET "
@@ -1149,35 +1026,18 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                     int executeUpdate = stt.executeUpdate(sql);
                     if (executeUpdate >= 1) {
 
-                        if (hellper_Portal.checkLog(doc_id) != null) {
+                        if (hellper_Portal.checkLog(doc_id, itemline) != 0) {
                             sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_log_header]\n"
                                     + "   SET \n"
-                                    + "      [doc_id] = '" + doc_id + "'\n"
-                                    + "      ,[nik] = '182735'\n"
+                                    + "      [nik] = '" + _Username + "'\n"
                                     + "      ,[update_date] = CONVERT(VARCHAR(26),GETDATE(),120)"
                                     + "      ,[qty_update] = '" + edt_detail_qty.getText() + "'\n"
-                                    + "      ,[keterangan] = 'data sudah di update', items='" + itemline + "'"
-                                    + " WHERE doc_id = '" + doc_id + "'";
+                                    + "      ,[keterangan] = 'data sudah di update'"
+                                    + " WHERE doc_id = '" + doc_id + "' and items='" + itemline + "'";
                             stt = connection.createStatement();
                             int executeUpdateLog = stt.executeUpdate(sql);
                             if (executeUpdateLog >= 1) {
 
-                                /*
-                                        hIDE uPDATE KE DB STORE
-                                 */
-//                                sql = "UPDATE [192.168.12.12].[dbstore].[dbo].[t_takeorder_detail] SET "
-//                                        + " qty_pesan ='" + edt_detail_qty.getText() + "', "
-//                                        + " qty_pesan_conv ='" + edt_detail_qty.getText() + "', "
-//                                        + "harga = '" + edt_detail_harga.getText() + "',"
-//                                        + "disc1 ='" + edt_disc_percent.getText() + "', "
-//                                        + "nett_value ='" + hellper_Portal.HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hellper_Portal.hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "', "
-//                                        + "disc_value = '" + hellper_Portal.hitung("5000", edt_detail_qty.getText()) + "' "
-//                                        + "WHERE doc_id = '" + doc_id + "' AND "
-//                                        + "plant_id = 'R009' AND materialdisplay_id = '" + hellper_Portal.checkProduct(JC_Product.getSelectedItem().toString()) + "' AND fiscalyear ='" + tahun + "' AND itemline = '" + itemline + "'";
-//
-//                                stt = connection.createStatement();
-//                                int executeUpdateHO = stt.executeUpdate(sql);
-//                                if (executeUpdateHO >= 1) {
                                 sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] set \n"
                                         + "nilai_order = (SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='" + doc_id + "' "
                                         + "AND plant_id ='R009' AND fiscalyear = '" + tahun + "')\n"
@@ -1189,28 +1049,26 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                                     JOptionPane.showMessageDialog(null, "Dokument " + doc_id + " Berhasil Di Update");
                                     getDataHeaderTable(ValuesDefault);
                                     getDataHeaderDetailTable(ValuesDefault);
-                                    /*
-                                        hIDE uPDATE KE DB STORE
-                                     */
-//                                        sql = "UPDATE [192.168.12.12].[dbstore].[dbo].[t_takeorder_header] set \n"
-//                                                + "nilai_order = (SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='" + doc_id + "' "
-//                                                + "AND plant_id ='R009' AND fiscalyear = '" + tahun + "')\n"
-//                                                + "WHERE doc_id = '" + doc_id + "' AND plant_id ='R009' AND fiscalyear = '" + tahun + "'";
-//
-//                                        stt = connection.createStatement();
-//                                        int executeST = stt.executeUpdate(sql);
-//                                        if (executeST >= 1) {
-//                                            JOptionPane.showMessageDialog(null, "Dokumen " + doc_id + " Berhasil Di Update");
-//                                            getDataHeaderTable(ValuesDefault);
-//                                            getDataHeaderDetailTable(UpdateValuesDefault);
-//                                        }
+
                                 }
-//                                }
                             } else {
                                 JOptionPane.showMessageDialog(null, "Dokument " + doc_id + " Gagal Di Update LOG");
                             }
                         } else {
-                            JOptionPane.showMessageDialog(null, "Dokument " + doc_id + " Di Database Log Tidak Tersedia");
+                            sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_log_header]\n"
+                                    + "           ([doc_id]\n"
+                                    + "           ,[nik]\n"
+                                    + "           ,[create_date]\n"
+                                    + "           ,[qty_awal]\n"
+                                    + "           ,[update_date]\n"
+                                    + "           ,[qty_update]\n"
+                                    + "           ,[keterangan],[items])\n"
+                                    + "     VALUES ('" + doc_id + "','" + _Username + "',CONVERT(VARCHAR(26),GETDATE(),120),'" + edt_detail_qty.getText() + "',NULL,NULL,'Document Insert','" + itemline + "')";
+                            connection = C_Connection.getConnection();
+                            ps = connection.prepareStatement(sql);
+                            ps.execute();
+                            JOptionPane.showMessageDialog(null, "Dokument " + doc_id + " Berhasil Di Tambahkan Di Log");
+                            getDataHeaderDetailTable(UpdateValuesDefault);
                         }
                         getDataHeaderDetailTable(UpdateValuesDefault);
                     } else {
@@ -1221,8 +1079,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                 }
 
             } else {
-//                JOptionPane.showMessageDialog(null, "Ini Untuk Insert " +tahun);
-
+                int iInsert = hellper_Portal.checkLine(doc_id, "R009", tahun);
                 try {
                     sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail]\n"
                             + "           ([doc_id]\n"
@@ -1238,13 +1095,14 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                             + "           ,[qty_pesan_conv]\n"
                             + "           ,[unit_conv]\n"
                             + "           ,[flag_prioritas]\n"
-                            + "           ,[nett_value])\n"
+                            + "           ,[nett_value]"
+                            + ",[qty_kirim])\n"
                             + "     VALUES "
-                            + "('" + doc_id + "','R009',YEAR(getdate()),'" + hellper_Portal.checkLine(doc_id, "R009", tahun) + "','" + hellper_Portal.checkProduct(JC_Product.getSelectedItem().toString()) + "',"
+                            + "('" + doc_id + "','R009',YEAR(getdate()),'" + iInsert + "','" + hellper_Portal.checkProduct(JC_Product.getSelectedItem().toString()) + "',"
                             + "'" + edt_detail_qty.getText() + "','" + edt_detail_harga.getText() + "','" + edt_disc_percent.getText() + "'," + hellper_Portal.hitung(edt_dic_rp.getText(), edt_detail_qty.getText()) + ",'PC',"
-                            + "'" + edt_detail_qty.getText() + "','PC',NULL,'" + hellper_Portal.HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hellper_Portal.hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "')";
+                            + "'" + edt_detail_qty.getText() + "','PC',NULL,'" + hellper_Portal.HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hellper_Portal.hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "','" + edt_detail_qty.getText() + "')";
 
-                    System.out.println(sql);
+//                    System.out.println(sql);
                     connection = C_Connection.getConnection();
                     ps = connection.prepareStatement(sql);
                     ps.execute();
@@ -1283,7 +1141,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                             + "           ,[update_date]\n"
                             + "           ,[qty_update]\n"
                             + "           ,[keterangan],[items])\n"
-                            + "     VALUES ('" + doc_id + "','182735',CONVERT(VARCHAR(26),GETDATE(),120),'" + edt_detail_qty.getText() + "',NULL,NULL,'Document Insert','2')";
+                            + "     VALUES ('" + doc_id + "','" + _Username + "',CONVERT(VARCHAR(26),GETDATE(),120),'" + edt_detail_qty.getText() + "',NULL,NULL,'Document Insert','" + iInsert + "')";
                     connection = C_Connection.getConnection();
                     ps = connection.prepareStatement(sql);
                     ps.execute();
@@ -1336,385 +1194,9 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                 }
             }
         }
-
-//         Plant_id = jTableDetail.getValueAt(baris, 5).toString();
-//   tahun = jTableDetail.getValueAt(baris, 5).toString();
-//    material = jTableDetail.getValueAt(baris, 5).toString();
-//        System.out.println(checkDokument(doc_id));     private int checkDokument(String doc, String Plant, String tahun, String material) {
-//        if (doc_id == null) {
-//            JOptionPane.showMessageDialog(null, "Mohon Maaf Anda Belum Memilih Document Header Item");
-//        } else {
-//            if (checkMaterialItems(doc_id, checkProduct(JC_Product.getSelectedItem().toString())) >= 1) {
-//                JOptionPane.showMessageDialog(null, "Mohon Maaf Anda Sudah Comput " + checkProduct(JC_Product.getSelectedItem().toString()) + " Dan No Doc " + doc_id);
-////                resetHeaderDetail();
-//                getDataHeaderDetailTable(ValuesDefault);
-//            } else {
-//            System.out.println(checkDokument(doc_id, Plant_id, txt_tahuns.getText(), checkProduct(JC_Product.getSelectedItem().toString())));
-//            if (checkDokument(doc_id) == 0) {
-//            if (checkDokument(doc_id, Plant_id, Tahuns, material) == 0) {
-//            if (checkDokument(doc_id, Plant_id, Tahuns, material) == 0) {
-//
-//                try {
-//
-//                    sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail]\n"
-//                            + "           ([doc_id]\n"
-//                            + "           ,[plant_id]\n"
-//                            + "           ,[fiscalyear]\n"
-//                            + "           ,[itemline]\n"
-//                            + "           ,[materialdisplay_id]\n"
-//                            + "           ,[qty_pesan]\n"
-//                            + "           ,[harga]\n"
-//                            + "           ,[disc1]\n"
-//                            + "           ,[disc_value]\n"
-//                            + "           ,[unit_id]\n"
-//                            + "           ,[qty_pesan_conv]\n"
-//                            + "           ,[unit_conv]\n"
-//                            + "           ,[flag_prioritas]\n"
-//                            + "           ,[nett_value])\n"
-//                            + "     VALUES "
-//                            + "('" + doc_id + "','R009',YEAR(getdate()),'" + txt_contoh.getText() + "','" + checkProduct(JC_Product.getSelectedItem().toString()) + "',"
-//                            + "'" + edt_detail_qty.getText() + "','" + edt_detail_harga.getText() + "','" + edt_disc_percent.getText() + "'," + hitung(edt_dic_rp.getText(), edt_detail_qty.getText()) + ",'PC',"
-//                            + "'" + edt_detail_qty.getText() + "','PC',NULL,'" + HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "')";
-//
-//                    System.out.println("");
-//                    connection = C_Connection.getConnection();
-//                    ps = connection.prepareStatement(sql);
-//                    ps.execute();
-//
-//                    sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[t_takeorder_detail]\n"
-//                            + "           ([doc_id]\n"
-//                            + "           ,[plant_id]\n"
-//                            + "           ,[fiscalyear]\n"
-//                            + "           ,[itemline]\n"
-//                            + "           ,[materialdisplay_id]\n"
-//                            + "           ,[qty_pesan]\n"
-//                            + "           ,[harga]\n"
-//                            + "           ,[disc1]\n"
-//                            + "           ,[disc_value]\n"
-//                            + "           ,[unit_id]\n"
-//                            + "           ,[qty_pesan_conv]\n"
-//                            + "           ,[unit_conv]\n"
-//                            + "           ,[flag_prioritas]\n"
-//                            + "           ,[nett_value])\n"
-//                            + "     VALUES "
-//                            + "('" + doc_id + "','R009',YEAR(getdate()),'" + txt_contoh.getText() + "','" + checkProduct(JC_Product.getSelectedItem().toString()) + "',"
-//                            + "'" + edt_detail_qty.getText() + "','" + edt_detail_harga.getText() + "','" + edt_disc_percent.getText() + "'," + hitung(edt_dic_rp.getText(), edt_detail_qty.getText()) + ",'PC',"
-//                            + "'" + edt_detail_qty.getText() + "','PC',NULL,'" + HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "')";
-//
-//                    connection = C_Connection.getConnection();
-//                    ps = connection.prepareStatement(sql);
-//                    ps.execute();
-//
-//                    sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_log_header]\n"
-//                            + "           ([doc_id]\n"
-//                            + "           ,[nik]\n"
-//                            + "           ,[create_date]\n"
-//                            + "           ,[qty_awal]\n"
-//                            + "           ,[update_date]\n"
-//                            + "           ,[qty_update]\n"
-//                            + "           ,[keterangan],[items])\n"
-//                            + "     VALUES ('" + doc_id + "','182735',CONVERT(VARCHAR(26),GETDATE(),120),'" + edt_detail_qty.getText() + "',NULL,NULL,'Document Insert','2')";
-//                    connection = C_Connection.getConnection();
-//                    ps = connection.prepareStatement(sql);
-//                    ps.execute();
-//
-//                    sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_log_header]\n"
-//                            + "           ([doc_id]\n"
-//                            + "           ,[nik]\n"
-//                            + "           ,[create_date]\n"
-//                            + "           ,[qty_awal]\n"
-//                            + "           ,[update_date]\n"
-//                            + "           ,[qty_update]\n"
-//                            + "           ,[keterangan],[items])\n"
-//                            + "     VALUES ('" + doc_id + "','182735',CONVERT(VARCHAR(26),GETDATE(),120),'" + edt_detail_qty.getText() + "',NULL,NULL,'Document Insert','2')";
-//                    connection = C_Connection.getConnection();
-//                    ps = connection.prepareStatement(sql);
-//                    ps.execute();
-//
-//                    sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] set \n"
-//                            + "nilai_order = (SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='" + doc_id + "' "
-//                            + "AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "')\n"
-//                            + "WHERE doc_id = '" + doc_id + "' AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "'";
-//
-////                    System.out.println(sql);
-//                    stt = connection.createStatement();
-//                    int executeUpdate = stt.executeUpdate(sql);
-//                    if (executeUpdate >= 1) {
-//
-//                        sql = "UPDATE [192.168.12.12].[dbstore].[dbo].[t_takeorder_header] set \n"
-//                                + "nilai_order = (SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='" + doc_id + "' "
-//                                + "AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "')\n"
-//                                + "WHERE doc_id = '" + doc_id + "' AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "'";
-//
-//                        stt = connection.createStatement();
-//                        int execute01 = stt.executeUpdate(sql);
-//                        if (execute01 >= 1) {
-//                            JOptionPane.showMessageDialog(null, "Sukses Berhasil di input :" + doc_id);
-//                            getDataHeaderTable(ValuesDefault);
-//                            getDataHeaderDetailTable(ValuesDefault);
-//                        }
-//
-//                    }
-//
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                try {
-//                    sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] SET "
-//                            + " qty_pesan ='" + edt_detail_qty.getText() + "', "
-//                            + " qty_pesan_conv ='" + edt_detail_qty.getText() + "', "
-//                            + "harga = '" + edt_detail_harga.getText() + "',"
-//                            + "disc1 ='" + edt_disc_percent.getText() + "', "
-//                            + "nett_value ='" + HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "', "
-//                            + "disc_value = '" + hitung("5000", edt_detail_qty.getText()) + "' "
-//                            + "WHERE doc_id = '" + doc_id + "' AND "
-//                            + "itemline ='" + itemline + "'";
-//
-//                    stt = connection.createStatement();
-//                    int executeUpdate = stt.executeUpdate(sql);
-//                    if (executeUpdate >= 1) {
-//
-//                        if (checkLog(doc_id) != null) {
-//                            sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_log_header]\n"
-//                                    + "   SET \n"
-//                                    + "      [doc_id] = '" + doc_id + "'\n"
-//                                    + "      ,[nik] = '182735'\n"
-//                                    + "      ,[update_date] = CONVERT(VARCHAR(26),GETDATE(),120)"
-//                                    + "      ,[qty_update] = '" + edt_detail_qty.getText() + "'\n"
-//                                    + "      ,[keterangan] = 'data sudah di update', items='" + itemline + "'"
-//                                    + " WHERE doc_id = '" + doc_id + "'";
-////                            System.out.println(sql);
-//                            stt = connection.createStatement();
-//                            int executeUpdateLog = stt.executeUpdate(sql);
-//                            if (executeUpdateLog >= 1) {
-////                                JOptionPane.showMessageDialog(null, "Dokument Berhasil Di Update" + doc_id + "");
-//
-//                                sql = "UPDATE [192.168.12.12].[dbstore].[dbo].[t_takeorder_detail] SET "
-//                                        + " qty_pesan ='" + edt_detail_qty.getText() + "', "
-//                                        + " qty_pesan_conv ='" + edt_detail_qty.getText() + "', "
-//                                        + "harga = '" + edt_detail_harga.getText() + "',"
-//                                        + "disc1 ='" + edt_disc_percent.getText() + "', "
-//                                        + "nett_value ='" + HitungNet(edt_detail_harga.getText(), edt_detail_qty.getText(), Integer.toString(hitung(edt_dic_rp.getText(), edt_detail_qty.getText()))) + "', "
-//                                        + "disc_value = '" + hitung("5000", edt_detail_qty.getText()) + "' "
-//                                        + "WHERE doc_id = '" + doc_id + "' AND "
-//                                        + "plant_id = 'R009' AND materialdisplay_id = '" + checkProduct(JC_Product.getSelectedItem().toString()) + "' AND fiscalyear ='" + Tahuns + "' AND itemline = '" + itemline + "'";
-//
-//                                stt = connection.createStatement();
-//                                int executeUpdateHO = stt.executeUpdate(sql);
-//                                if (executeUpdateHO >= 1) {
-////                                    JOptionPane.showMessageDialog(null, "Dokument Berhasil Di Update" + doc_id + "");
-//
-//                                    sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_header] set \n"
-//                                            + "nilai_order = (SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='" + doc_id + "' "
-//                                            + "AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "')\n"
-//                                            + "WHERE doc_id = '" + doc_id + "' AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "'";
-//
-//                                    stt = connection.createStatement();
-//                                    int execute = stt.executeUpdate(sql);
-//                                    if (execute >= 1) {
-//
-//                                        sql = "UPDATE [192.168.12.12].[dbstore].[dbo].[t_takeorder_header] set \n"
-//                                                + "nilai_order = (SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='" + doc_id + "' "
-//                                                + "AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "')\n"
-//                                                + "WHERE doc_id = '" + doc_id + "' AND plant_id ='R009' AND fiscalyear = '" + txt_tahuns.getText() + "'";
-//
-//                                        stt = connection.createStatement();
-//                                        int executeST = stt.executeUpdate(sql);
-//                                        if (executeST >= 1) {
-//                                            JOptionPane.showMessageDialog(null, "Dokumen " + doc_id + " Berhasil Di Update");
-//                                            getDataHeaderTable(ValuesDefault);
-//                                            getDataHeaderDetailTable(ValuesDefault);
-//                                        }
-//                                    }
-//                                }
-//                            } else {
-//                                JOptionPane.showMessageDialog(null, "Dokument " + doc_id + " Gagal Di Update LOG");
-//                            }
-//                        } else {
-//                            JOptionPane.showMessageDialog(null, "Dokument " + doc_id + " Di Database Log Tidak Tersedia");
-//                        }
-//                        getDataHeaderDetailTable(ValuesDefault);
-//                    } else {
-//                        JOptionPane.showMessageDialog(null, "Gagal Update, Silahkan Coba Lagi");
-//                    }
-//                } catch (SQLException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-////            }
-//
-//        }
     }//GEN-LAST:event_btn_detail_AddMouseClicked
 
-//    private String returnValues() {
-//        String Hasil = null;
-//
-//        try {
-//            sql = "SELECT SUM(nett_value) as net FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id ='50000015'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                if (res.getString(1) == null) {
-//                    Hasil = null;
-//                } else {
-//
-//                    Hasil = res.getString(1);
-//
-//                }
-//            }
-//            res.close();
-//            stt.close();
-//
-//        } catch (SQLException e) {
-//        }
-//        return Hasil;
-//    }
-//    private int checkLine(String A, String B, String C) {
-//        int Hasil = 0;
-//
-//        try {
-//            sql = "select MAX(itemline) as item from [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] where doc_id = '" + A + "' and plant_id = '" + B + "' "
-//                    + "and fiscalyear = '" + C + "'";
-//
-////            System.out.println(sql);
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                if (res.getString(1) == null) {
-//                    Hasil = 2;
-//                } else {
-//                    Hasil = Integer.parseInt(res.getString(1)) + 1;
-//                }
-//            }
-//            res.close();
-//            stt.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return Hasil;
-//    }
-//
-//    private int hitung(String A, String B) {
-//        int Hasil = 0;
-//        Hasil = Integer.parseInt(A) * Integer.parseInt(B);
-//        return Hasil;
-//    }
-//    private int HitungNet(String A, String B, String C) {
-//        int Hasil = 0;
-//        Hasil = Integer.parseInt(A) * Integer.parseInt(B) - Integer.parseInt(C);
-//        return Hasil;
-//    }
-//
-//    private String checkItemLine(String Log) {
-//        String Hasil = null;
-//        try {
-//            sql = "select max(items)+1 as items from [192.168.12.12].[dbstore_ho].[dbo].t_takeorder_log_header WHERE doc_id ='" + Log + "'";
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                if (res.getString(1).toString() == null) {
-//                    Hasil = "1";
-//                } else {
-//                    Hasil = res.getString(1).toString();
-//                }
-//            }
-//            res.close();
-//            stt.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return Hasil;
-//    }
-//    private String checkLog(String Log) {
-//        String Hasil = null;
-//        try {
-//            sql = "select count(doc_id) as total from [192.168.12.12].[dbstore_ho].[dbo].t_takeorder_log_header WHERE doc_id ='" + Log + "'";
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getString(1).toString();
-//            }
-//            res.close();
-//            stt.close();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return Hasil;
-//    }
-//    private String AddLine(String iddoc) {
-//        String Hasil = null;
-//        try {
-//
-//            sql = "SELECT max(itemline)+1 as items FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] WHERE doc_id = '" + iddoc + "'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getString(1).toString();
-//
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        return Hasil;
-//    }
-//    private String getValueMaterial(String materialid) {
-//        String Hasil = null;
-//        try {
-//            sql = "SELECT harga_jual FROM [192.168.12.12].[dbstore_ho].[dbo].[m_material_price] WHERE material_id = '" + materialid + "'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getString(1).toString();
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        return Hasil;
-//    }
-//    private int checkDokument(String doc, String Plant, String tahun, String material) {
-//        int Hasil = 0;
-//        try {
-//            sql = "SELECT COUNT([doc_id]) AS JUMLAH FROM [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_detail] "
-//                    + "WHERE doc_id = '" + doc + "' AND plant_id ='R009' AND fiscalyear ='" + tahun + "' AND materialdisplay_id = '" + material + "'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getInt(1);
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        return Hasil;
-//    }
-//
+
     private void edt_remarksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_remarksActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_edt_remarksActionPerformed
@@ -1752,7 +1234,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                     + "'" + edt_remarks.getText() + "',"
                     + "'N',"
                     + "'N',"
-                    + "'HO-ADMIN',"
+                    + "'" + _Username + "',"
                     + "NULL,"
                     + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
                     + "NULL,"
@@ -1766,47 +1248,6 @@ public class JFrame_Consigment extends javax.swing.JFrame {
             ps = connection.prepareStatement(sql);
             ps.execute();
 
-            sql = "INSERT INTO [192.168.12.12].[dbstore].[dbo].[t_takeorder_header]"
-                    + "([doc_id],[plant_id],[fiscalyear],[doc_date],[posting_date],[production_date],[delivery_date],[order_type],[customer_id]\n"
-                    + ",[customer_name], [member_id], [tlp] ,[jenis_trans] ,[sloc_id] ,[counter_print] ,[flag_proses], [process_date] ,[nilai_order]\n"
-                    + ",[dp] ,[remark] , [flag_produksi], [flag_bypass], [user_entry], [user_update], [create_date], [modify_date], [flag_prioritas]\n"
-                    + ",[no_op], [flag_cancel], [cancel_remark], [cancel_date], [cancel_user], [flag_closed], [closed_date], [closed_remark], [closed_user])\n"
-                    + "VALUES"
-                    + "('" + doc_id + "',"
-                    + "'R009',"
-                    + "YEAR(getdate()),"
-                    + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-                    + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-                    + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-                    + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-                    + "'TO',"
-                    + "'" + hellper_Portal.setPayType(jCCostumerType.getSelectedItem().toString()) + "',"
-                    + "'" + edt_costumer_name.getSelectedItem().toString() + "',"
-                    + "NULL,"
-                    + "'" + hellper_Portal.goPhone(edt_costumer_name.getSelectedItem().toString()) + "',"
-                    + "'IN',"
-                    + "'DP001',"
-                    + "0,"
-                    + "'N',"
-                    + "NULL,"
-                    + "NULL,"
-                    + "" + edt_cash.getText() + ","
-                    + "'" + edt_remarks.getText() + "',"
-                    + "'N',"
-                    + "'N',"
-                    + "'HO-ADMIN',"
-                    + "NULL,"
-                    + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-                    + "NULL,"
-                    + "'N',"
-                    + "NULL,"
-                    + "'N',"
-                    + "NULL,"
-                    + "NULL,NULL,'N',NULL,NULL,NULL)";
-
-            connection = C_Connection.getConnection();
-            ps = connection.prepareStatement(sql);
-            ps.execute();
 
             JOptionPane.showMessageDialog(null, "Terima Kasih Data Sudah Masuk");
             getDataHeaderTable(ValuesDefault);
@@ -1816,129 +1257,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_save_headerMouseClicked
 
-//    private int HitungAmout(String A, String B, String C) {
-//        int total = 0;
-//        total = Integer.parseInt(A) + Integer.parseInt(B) + Integer.parseInt(C);
-//        return total;
-//    }
-//
-//    private int valueHeader(String document) {
-//        int hasil = 0;
-//        try {
-//
-//            sql = "SELECT count(trans_id) AS banyaknya FROM [192.168.12.12].[dbstore_ho].[dbo].[t_dp_header] WHERE trans_id = '" + document + "'";
-//
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                hasil = res.getInt(1);
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//
-//        return hasil;
-//
-//    }
-//
-//    public void GoPayment(String doc_id) {
-//
-//        if (valueHeader(doc_id) == 0) {
-//            try {
-//                sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_dp_header]\n"
-//                        + "           ([doc_id]\n"
-//                        + "           ,[fiscalyear]\n"
-//                        + "           ,[plant_id]\n"
-//                        + "           ,[doc_date]\n"
-//                        + "           ,[trans_id]\n"
-//                        + "           ,[trans_date]\n"
-//                        + "           ,[doc_type]\n"
-//                        + "           ,[type_bayar]\n"
-//                        + "           ,[amount_dp]\n"
-//                        + "           ,[bayar_cash]\n"
-//                        + "           ,[bayar_noncash]\n"
-//                        + "           ,[pay_note]\n"
-//                        + "           ,[flag_lunas]\n"
-//                        + "           ,[user_entry]\n"
-//                        + "           ,[create_date]\n"
-//                        + "           ,[user_modify]\n"
-//                        + "           ,[modify_date]\n"
-//                        + "           ,[flag_batal])\n"
-//                        + "     VALUES  " + "('" + getStringID() + "',YEAR(getdate()),'R009',"
-//                        + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-//                        + "'" + getStringID() + "','" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-//                        + "NULL, '" + rePaytype(jCPayment.getSelectedItem().toString()) + "',"
-//                        + "" + HitungAmout(edt_cash.getText(), edt_noncash.getText(), edt_paynote.getText()) + ","
-//                        + "" + Integer.parseInt(edt_cash.getText()) + ","
-//                        + "" + Integer.parseInt(edt_noncash.getText()) + ","
-//                        + "" + Integer.parseInt(edt_paynote.getText()) + ","
-//                        + "'N',"
-//                        + "'Admin',"
-//                        + "'" + sdf.format(edt_date.getSelectedDate().getTime()) + "',"
-//                        + "NULL,"
-//                        + "NULL,"
-//                        + "'N')";
-//                JOptionPane.showMessageDialog(null, "Penyimpanan Data Berhasil");
-//                connection = C_Connection.getConnection();
-//                ps = connection.prepareStatement(sql);
-//                ps.execute();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        } else if (valueHeader(doc_id) >= 1) {
-//
-//            try {
-//                sql = "UPDATE [192.168.12.12].[dbstore_ho].[dbo].[t_dp_header] SET "
-//                        + "amount_dp =" + HitungAmout(edt_cash.getText(), edt_noncash.getText(), edt_paynote.getText()) + ", "
-//                        + "bayar_cash = " + Integer.parseInt(edt_cash.getText()) + ","
-//                        + "bayar_noncash =" + Integer.parseInt(edt_noncash.getText()) + ", "
-//                        + "pay_note = " + Integer.parseInt(edt_paynote.getText()) + ", "
-//                        + "type_bayar = '" + rePaytype(jCPayment.getSelectedItem().toString()) + "' "
-//                        + "WHERE trans_id = '" + doc_id + "'";
-//
-//                stt = connection.createStatement();
-//                int executeUpdate = stt.executeUpdate(sql);
-//
-//                if (executeUpdate >= 1) {
-//                    JOptionPane.showMessageDialog(null, "Sukses Update");
-//                    getDataHeaderTable(ValuesDefault);
-//                    goFormHeader(-1);
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "Gagal Update, Silahkan Coba Lagi");
-//                }
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-//
-//    private String setPayType(String Masuk) {
-//        String Hasil = null;
-//
-//        try {
-//            sql = "SELECT customer_id, customer_name FROM [192.168.12.12].[dbstore_ho].[dbo].[m_customer] WHERE customer_name ='" + Masuk + "'";
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//                Hasil = res.getString(1);
-//            }
-//
-//            res.close();
-//            stt.close();
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return Hasil;
-//    }
-//
+
     private String getStringID() {
         String Hasil = null;
         try {
@@ -1965,37 +1284,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
     private void jCPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCPaymentActionPerformed
         // TODO add your handling code here:
 
-//        if (jCPayment.getSelectedIndex() == 0) {
-//            payValues = "C";
-//            edt_cash.setEnabled(true);
-//            edt_noncash.setEnabled(false);
-//            edt_paynote.setEnabled(false);
-//        } else if (jCPayment.getSelectedIndex() == 1) {
-//            payValues = "T";
-//            edt_cash.setEnabled(false);
-//            edt_noncash.setEnabled(true);
-//            edt_paynote.setEnabled(true);
-//        } else if (jCPayment.getSelectedIndex() == 2) {
-//            payValues = "D";
-//            edt_cash.setEnabled(false);
-//            edt_noncash.setEnabled(true);
-//            edt_paynote.setEnabled(true);
-//        } else if (jCPayment.getSelectedIndex() == 3) {
-//            payValues = "K";
-//            edt_cash.setEnabled(false);
-//            edt_noncash.setEnabled(true);
-//            edt_paynote.setEnabled(true);
-//        } else if (jCPayment.getSelectedIndex() == 4) {
-//            payValues = "CK";
-//            edt_cash.setEnabled(true);
-//            edt_noncash.setEnabled(true);
-//            edt_paynote.setEnabled(true);
-//        } else if (jCPayment.getSelectedIndex() == 5) {
-//            payValues = "CD";
-//            edt_cash.setEnabled(true);
-//            edt_noncash.setEnabled(true);
-//            edt_paynote.setEnabled(true);
-//        }
+
 
     }//GEN-LAST:event_jCPaymentActionPerformed
 
@@ -2012,51 +1301,10 @@ public class JFrame_Consigment extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_detail_AddActionPerformed
 
-//    private String goPhone(String nama) {
-//        String Hasil = null;
-//        try {
-//
-//            sql = "SELECT telp from [192.168.12.12].[dbstore_ho].[dbo].t_takeorder_user where nama_cust = '" + nama + "'";
-//            connection = C_Connection.getConnection();
-//            stt = connection.createStatement();
-//            res = stt.executeQuery(sql);
-//
-//            while (res.next()) {
-//
-//                Hasil = res.getString(1);
-//            }
-//            res.close();
-//            stt.close();
-//        } catch (SQLException e) {
-//            System.out.println(e.getMessage());
-//        }
-//        return Hasil;
-//    }
 
     private void edt_costumer_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_costumer_nameActionPerformed
 
-//        edt_address.setText(edt_costumer_name.getSelectedItem().toString());
-//        if (edt_costumer_name.getSelectedIndex() >= 0) {
-//            try {
-//                sql = "select id_cust, nama_cust, alamat, telp from [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_user] WHERE nama_cust ='" + edt_costumer_name.getSelectedItem().toString() + "'";
-//
-//                connection = C_Connection.getConnection();
-//                stt = connection.createStatement();
-//                res = stt.executeQuery(sql);
-//
-//                while (res.next()) {
-////                edt_phones.setText(res.getString(4));
-//                    edt_address.setText(res.getString(3).toString());
-//                    System.out.println(sql);
-//                }
-//
-//                res.close();
-//                stt.close();
-//
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
+
 
     }//GEN-LAST:event_edt_costumer_nameActionPerformed
 
@@ -2072,13 +1320,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
     private void btn_RefreshMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_RefreshMouseClicked
 
         DetailHeaderForm(2);
-//        JC_Product.setEnabled(true);
-//        edt_detail_harga.setText("");
-////        edt_detail_harga.setVisible(true);
-//        edt_detail_harga.setEnabled(true);
-//        edt_detail_qty.setVisible(true);
-//        edt_detail_qty.setText("");
-//        btn_detail_Add.setText("Add");
+
     }//GEN-LAST:event_btn_RefreshMouseClicked
 
     private void edt_detail_hargaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_edt_detail_hargaKeyTyped
@@ -2143,7 +1385,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                         + "A.customer_id = B.customer_id AND\n"
                         + "A.plant_id = C.plant_id and \n"
                         + "A.order_type = 'TO' and\n"
-                        + "A.fiscalyear =  YEAR(getdate()) \n"
+                        + "A.fiscalyear >= YEAR(getdate()) -1 AND A.fiscalyear <= YEAR(getdate()) \n"
                         + "/*and\n"
                         + "A.flag_proses = 'N' and\n"
                         + "A.flag_cancel = 'N' and\n"
@@ -2163,7 +1405,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
                         + "A.customer_id = B.customer_id AND\n"
                         + "A.plant_id = C.plant_id and \n"
                         + "A.order_type = 'TO' and\n"
-                        + "A.fiscalyear =  YEAR(getdate()) \n"
+                        + "A.fiscalyear >= YEAR(getdate()) -1 AND A.fiscalyear <= YEAR(getdate()) \n"
                         + "/*and\n"
                         + "A.flag_proses = 'N' and\n"
                         + "A.flag_cancel = 'N' and\n"
@@ -2183,6 +1425,7 @@ public class JFrame_Consigment extends javax.swing.JFrame {
             res.close();
             stt.close();
             JtHeader.setModel(model);
+            getNewRenderedTable(JtHeader);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -2256,10 +1499,57 @@ public class JFrame_Consigment extends javax.swing.JFrame {
             res.close();
             stt.close();
             jTableDetail.setModel(model);
+            getNewRenderedTable(jTableDetail);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    private static JTable getNewRenderedTable(final JTable table) {
+        table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus, int row, int col) {
+                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col);
+                String Doc_ = (String) table.getModel().getValueAt(row, 0);
+
+                Connection connection;
+                Statement stt;
+                String sql;
+                ResultSet res;
+                PreparedStatement ps = null;
+
+                try {
+                    sql = "select count(qty_update) as jml from [192.168.12.12].[dbstore_ho].[dbo].[t_takeorder_log_header] where doc_id = '" + Doc_ + "'";
+
+                    connection = C_Connection.getConnection();
+                    stt = connection.createStatement();
+                    res = stt.executeQuery(sql);
+
+                    while (res.next()) {
+                        int Hasil = res.getInt(1);
+
+                        if (Hasil >= 1) {
+                            setBackground(Color.ORANGE);
+                            setForeground(Color.black);
+                        } else {
+                            setBackground(table.getBackground());
+                            setForeground(table.getForeground());
+                        }
+
+                    }
+                    res.close();
+                    stt.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return this;
+            }
+        });
+        return table;
     }
 
     /**

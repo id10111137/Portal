@@ -266,7 +266,7 @@ public class JFrame_ConsigmentOrder extends javax.swing.JFrame {
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
 
-        JFrame_PaymentConsigment jFrame_PaymentConsigment = new JFrame_PaymentConsigment(doc_id);
+        JFrame_PaymentConsigment jFrame_PaymentConsigment = new JFrame_PaymentConsigment(doc_id, 0);
         jFrame_PaymentConsigment.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_jButton2MouseClicked

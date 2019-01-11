@@ -5,6 +5,21 @@
  */
 package View;
 
+import Hellper.C_Connection;
+import Hellper.Hellper_Portal;
+import java.awt.Image;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.NumberFormat;
+import java.util.Locale;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 /**
  *
  * @author PCIT1
@@ -14,13 +29,89 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
     /**
      * Creates new form JFrame_Consigment_Items
      */
+    Connection connection;
+    Statement stt;
+    String sql;
+    ResultSet res;
+    PreparedStatement ps = null;
+    public String _Material_Doc;
+    Hellper_Portal hellper_Portal;
+
     public JFrame_Consigment_Items() {
         initComponents();
     }
-    
-    public JFrame_Consigment_Items(String Doc_Id) {
+
+    public JFrame_Consigment_Items(String Material_Doc) {
         initComponents();
-//        jLabel1.setText(Doc_Id);
+        _Material_Doc = Material_Doc;
+        getData(_Material_Doc);
+        hellper_Portal = new Hellper_Portal();
+
+        edt_harga.setHorizontalAlignment(JTextField.CENTER);
+        txt_promo.setHorizontalAlignment(JTextField.CENTER);
+        edt_saldo.setHorizontalAlignment(JTextField.CENTER);
+        edt_qty.setHorizontalAlignment(JTextField.CENTER);
+
+    }
+
+    private void getData(String Material_Doc) {
+
+        try {
+            sql = "SELECT\n"
+                    + "	A.material_id, A.material_name, B.harga_jual, B.disc\n"
+                    + "FROM\n"
+                    + " [192.168.12.12].[dbstore_ho].[dbo].[m_material] AS A,\n"
+                    + " [192.168.12.12].[dbstore_ho].[dbo].[m_material_price] AS B\n"
+                    + "WHERE\n"
+                    + "A.material_id = B.material_id AND A.material_id in ('" + Material_Doc + "')";
+
+            connection = C_Connection.getConnection();
+            stt = connection.createStatement();
+            res = stt.executeQuery(sql);
+
+            while (res.next()) {
+                txt_materialname.setText(res.getString(2));
+                edt_harga.setText(res.getString(3));
+                txt_promo.setText(res.getString(4));
+                edt_saldo.setText("0");
+                getIcon(res.getString(1));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void getIcon(String material_id) {
+
+        Image image = null;
+        File folderInput = null;
+        try {
+            if (material_id.equals("FG00281")) {
+                folderInput = new File("C:\\Users\\Logo\\lapis_bandung_pandan.jfif");
+            } else {
+                folderInput = new File("C:\\Users\\Logo\\lapis_bandung.png");
+            }
+
+            txt_items_image.setIcon(ResizeImage1(folderInput.getAbsolutePath(), null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public ImageIcon ResizeImage1(String ImagePath, byte[] pic) {
+        ImageIcon myImage = null;
+        if (ImagePath != null) {
+            myImage = new ImageIcon(ImagePath);
+        } else {
+            myImage = new ImageIcon(pic);
+        }
+        Image img = myImage.getImage();
+        Image newImage = img.getScaledInstance(txt_items_image.getWidth(), txt_items_image.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImage);
+        return image;
+
     }
 
     /**
@@ -35,14 +126,19 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         txt_items_image = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
+        txt_materialname = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txt_promo = new javax.swing.JTextField();
+        edt_harga = new javax.swing.JTextField();
+        edt_saldo = new javax.swing.JTextField();
+        edt_qty = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -53,88 +149,149 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txt_items_image, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(txt_items_image, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txt_items_image, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+            .addComponent(txt_items_image, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         jPanel2.setBackground(new java.awt.Color(0, 0, 255));
         jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        txt_materialname.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txt_materialname.setForeground(new java.awt.Color(255, 255, 51));
+        txt_materialname.setText("jLabel5");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txt_materialname, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 39, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(txt_materialname)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setBackground(new java.awt.Color(0, 0, 255));
         jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 51));
+        jLabel1.setText("PRICE");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 105, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 38, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(0, 0, 255));
         jPanel5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel2.setText("PROMO");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(19, 19, 19))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 40, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel6.setBackground(new java.awt.Color(0, 0, 255));
         jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel3.setText("SALDO");
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(77, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(61, 61, 61))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 49, Short.MAX_VALUE)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel7.setBackground(new java.awt.Color(0, 0, 255));
         jPanel7.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel4.setText("QTY");
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 87, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jLabel4)
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 99, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jLabel4)
+                .addContainerGap(47, Short.MAX_VALUE))
         );
+
+        txt_promo.setEditable(false);
+
+        edt_harga.setEditable(false);
+        edt_harga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edt_hargaActionPerformed(evt);
+            }
+        });
+
+        edt_saldo.setEditable(false);
+
+        edt_qty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                edt_qtyActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,7 +304,7 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField4)))
+                        .addComponent(edt_qty)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -158,9 +315,9 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
                             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addComponent(jTextField3))
+                            .addComponent(txt_promo)
+                            .addComponent(edt_harga, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addComponent(edt_saldo))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -173,28 +330,91 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField2))
+                            .addComponent(edt_harga))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txt_promo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3))
+                        .addComponent(edt_saldo))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jTextField4))
+                    .addComponent(edt_qty))
                 .addContainerGap())
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void edt_qtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_qtyActionPerformed
+
+        int qty = Integer.parseInt(edt_qty.getText());
+        if (qty == 0) {
+            JOptionPane.showMessageDialog(null, "Jumlah Pembelian Tidak Sesuai");
+        } else if(qty <=0){
+            JOptionPane.showMessageDialog(null, "Jumlah Pembelian Tidak Sesuai");
+        } else if (qty > 4) {
+            JOptionPane.showMessageDialog(null, "Maximal Pembelian Adalah 4 Box");
+        } else {
+            try {
+                int nomor_log = hellper_Portal.GetIDLogTransaksi();
+
+                sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_pos_log]\n"
+                        + "           ([nomor_log_transaksi]\n"
+                        + "           ,[material_id]\n"
+                        + "           ,[item]\n"
+                        + "           ,[qty]\n"
+                        + "           ,[price]\n"
+                        + "           ,[date]\n"
+                        + "           ,[nik]\n"
+                        + "           ,[amount])\n"
+                        + "     VALUES\n"
+                        + "           ('" + nomor_log + "','" + _Material_Doc + "','1','" + Integer.parseInt(edt_qty.getText()) + "',"
+                        + "'" + edt_harga.getText() + "',getDATE(),'182735','" + Float.parseFloat(edt_harga.getText()) * Integer.parseInt(edt_qty.getText()) + "')";
+
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+
+                sql = "INSERT INTO [192.168.12.12].[dbstore_ho].[dbo].[t_pos_log]\n"
+                        + "           ([nomor_log_transaksi]\n"
+                        + "           ,[material_id]\n"
+                        + "           ,[item]\n"
+                        + "           ,[qty]\n"
+                        + "           ,[price]\n"
+                        + "           ,[date]\n"
+                        + "           ,[nik]\n"
+                        + "           ,[amount])\n"
+                        + "     VALUES\n"
+                        + "           ('" + nomor_log + "','FG00248','2','" + Integer.parseInt(edt_qty.getText()) + "',"
+                        + "'" + edt_harga.getText() + "',getDATE(),'182735','" + Float.parseFloat(edt_harga.getText()) * Integer.parseInt(edt_qty.getText()) + "')";
+
+                connection = C_Connection.getConnection();
+                ps = connection.prepareStatement(sql);
+                ps.execute();
+
+                JFrame_PaymentConsigment jFrame_PaymentConsigment = new JFrame_PaymentConsigment(_Material_Doc, 1);
+                jFrame_PaymentConsigment.setVisible(true);
+                this.setVisible(false);
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }//GEN-LAST:event_edt_qtyActionPerformed
+
+    private void edt_hargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_edt_hargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_edt_hargaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,16 +452,21 @@ public class JFrame_Consigment_Items extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField edt_harga;
+    private javax.swing.JTextField edt_qty;
+    private javax.swing.JTextField edt_saldo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JLabel txt_items_image;
+    private javax.swing.JLabel txt_materialname;
+    private javax.swing.JTextField txt_promo;
     // End of variables declaration//GEN-END:variables
 }

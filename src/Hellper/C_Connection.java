@@ -8,6 +8,7 @@ package Hellper;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -29,12 +30,10 @@ public class C_Connection {
         if (connect == null) {
             try {
                 Class.forName(driverName);
-                System.out.println("Class Driver Ditemukan");
                 try {
                     connect = DriverManager.getConnection(url, username, password);
-                    System.out.println("Koneksi Database Sukses");
                 } catch (SQLException se) {
-                    System.out.println("Koneksi Database Gagal : " + se);
+                    JOptionPane.showMessageDialog(null, "Periksa Koneksi Internet");
                     System.exit(0);
                 }
             } catch (ClassNotFoundException cnfe) {
